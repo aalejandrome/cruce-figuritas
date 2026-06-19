@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cruce de Figuritas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede; --paper-2:#ece3cd; --ink:#181410; --ink-soft:#5c5346;
+    --gold:#f3b612; --navy:#16324f; --red:#df3b2f; --line:#cdbf9f; --card:#fffdf6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"DM Sans",sans-serif;color:var(--ink);
+    background-color:var(--paper);
+    background-image:radial-gradient(var(--line) 1.1px, transparent 1.1px);
+    background-size:22px 22px;min-height:100vh;padding:32px 18px 70px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+  header{position:relative;text-align:center;margin-bottom:38px}
+  .badge{
+    display:inline-block;font-family:"Space Mono",monospace;font-size:12px;
+    letter-spacing:2px;text-transform:uppercase;background:var(--navy);color:var(--paper);
+    padding:6px 14px;border-radius:30px;margin-bottom:16px;transform:rotate(-2deg);
+  }
+  h1{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;
+    font-size:clamp(2.3rem,7vw,4rem);line-height:.95;letter-spacing:-.02em}
+  h1 .pop{color:var(--red);display:inline-block;transform:rotate(-1.5deg)}
+  .sub{margin-top:14px;color:var(--ink-soft);font-size:1.02rem;max-width:580px;margin-inline:auto}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .panel{
+    background:var(--card);border:2px solid var(--ink);border-radius:16px;
+    padding:18px 18px 16px;box-shadow:6px 7px 0 var(--ink);position:relative;
+  }
+  .panel .tab{display:inline-flex;align-items:center;gap:8px;
+    font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:10px}
+  .panel .tab span.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+  .panel.a .dot{background:var(--gold)}
+  .panel.b .dot{background:var(--navy)}
+  textarea{
+    width:100%;min-height:240px;resize:vertical;border:1.5px dashed var(--line);
+    border-radius:10px;background:var(--paper);padding:14px;
+    font-family:"Space Mono",monospace;font-size:15px;line-height:1.7;color:var(--ink);outline:none;
+  }
+  textarea:focus{border-color:var(--navy);background:#fff}
+  textarea::placeholder{color:#b3a585}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:26px 0 4px}
+  button{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.05rem;
+    cursor:pointer;border:2px solid var(--ink);border-radius:12px;padding:13px 26px;
+    transition:transform .08s ease, box-shadow .08s ease}
+  button:active{transform:translate(3px,3px)}
+  .btn-main{background:var(--gold);color:var(--ink);box-shadow:4px 5px 0 var(--ink)}
+  .btn-main:active{box-shadow:1px 2px 0 var(--ink)}
+  .btn-ghost{background:transparent;color:var(--ink);box-shadow:none}
+  .btn-ghost:hover{background:var(--paper-2)}
+  .alert{text-align:center;color:var(--red);font-weight:700;margin-top:16px;min-height:24px}
+  .warn{text-align:center;color:var(--ink-soft);font-weight:500;margin-top:6px;font-size:.9rem}
+  .result{margin-top:30px;display:none}
+  .result.show{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .result-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:18px}
+  .result-head h2{font-family:"Bricolage Grotesque",sans-serif;font-size:1.7rem;font-weight:800;letter-spacing:-.01em}
+  .counter{font-family:"Space Mono",monospace;font-weight:700;background:var(--red);color:#fff;
+    padding:8px 16px;border-radius:30px;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);font-size:.95rem}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+  .card{background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:14px;
+    box-shadow:4px 5px 0 var(--ink);opacity:0;animation:pop .35s ease forwards}
+  @keyframes pop{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:none}}
+  .card .code{display:inline-block;font-family:"Space Mono",monospace;font-weight:700;font-size:1.05rem;
+    background:var(--navy);color:var(--paper);padding:5px 12px;border-radius:8px;margin-bottom:11px;letter-spacing:1px}
+  .card .nums{display:flex;flex-wrap:wrap;gap:6px}
+  .num{font-family:"Space Mono",monospace;font-weight:700;font-size:.9rem;background:var(--paper-2);
+    border:1.5px solid var(--line);border-radius:7px;padding:4px 9px}
+  .empty{text-align:center;padding:34px;border:2px dashed var(--line);border-radius:14px;
+    color:var(--ink-soft);font-weight:500;background:var(--card)}
+  footer{text-align:center;margin-top:46px;color:var(--ink-soft);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="badge">Álbum · Intercambio</span>
+    <h1>Cruce de <span class="pop">Figuritas</span></h1>
+    <p class="sub">Pegá las dos listas y encontrá las figuritas que coinciden en ambas. El cruce es por código <em>y</em> número; cualquier emoji o texto extra tras el código se omite.</p>
+  </header>
+
+  <div class="grid">
+    <div class="panel a">
+      <div class="tab"><span class="dot"></span> Lista A</div>
+      <textarea id="listA" spellcheck="false" placeholder="ARG 5, 12, 18, 20&#10;BRA 3, 7, 9&#10;FWC1 1, 2&#10;MEX 44, 50"></textarea>
+    </div>
+    <div class="panel b">
+      <div class="tab"><span class="dot"></span> Lista B</div>
+      <textarea id="listB" spellcheck="false" placeholder="ARG 12, 20, 99&#10;FWC1 2, 3&#10;MEX 44&#10;GER 8"></textarea>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-main" id="search">Buscar coincidencias</button>
+    <button class="btn-ghost" id="example">Cargar ejemplo</button>
+    <button class="btn-ghost" id="clear">Limpiar</button>
+  </div>
+  <div class="alert" id="alert"></div>
+  <div class="warn" id="warn"></div>
+
+  <section class="result" id="result">
+    <div class="result-head">
+      <h2>Coincidencias</h2>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <span class="counter" id="counter">0</span>
+        <button class="btn-main" id="copy" style="font-size:.95rem;padding:10px 18px">Copiar resultado</button>
+      </div>
+    </div>
+    <div id="output"></div>
+  </section>
+
+  <footer>Cruce por código + número · 51 códigos válidos del álbum</footer>
+</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+
+  // Códigos oficiales del álbum (únicos identificadores válidos).
+  const VALID = new Set([
+    "FWC1","FWC2","FWC3","MEX","RSA","KOR","CZE","CAN","BIH","QAT","SUI","BRA",
+    "MAR","HAI","SCO","USA","PAR","AUS","TUR","GER","CUW","CIV","ECU","NED",
+    "JPN","SWE","TUN","BEL","EGY","IRN","NZL","ESP","CPV","KSA","URU","FRA",
+    "SEN","IRQ","NOR","ARG","ALG","AUT","JOR","POR","COD","UZB","COL","ENG",
+    "CRO","GHA","PAN"
+  ]);
+
+  // Patrón que detecta el código al inicio de la línea (códigos más largos primero,
+  // para que FWC1/FWC2/FWC3 se prioricen). Funciona aunque el código tenga algo pegado.
+  const CODE_RE = new RegExp("^(" + [...VALID].sort((a, b) => b.length - a.length).join("|") + ")", "i");
+
+  // Etiqueta de presentación: el emparejamiento usa el código base, pero algunas
+  // variables especiales se muestran y se copian con su emoji.
+  const DISPLAY = { FWC1: "FWC1 🏆", FWC2: "FWC2 🌎", FWC3: "FWC3 📜" };
+  const label = code => DISPLAY[code] || code;
+
+  // Parsea una lista. Cada línea = CÓDIGO + (opcional: emoji / letras / símbolos) + números.
+  // Tras el código se OMITE todo lo que no sean números hasta llegar a ellos.
+  // Devuelve {map, unknown}.
+  function parseList(text){
+    const map = new Map();          // código -> Set de números
+    const unknown = new Set();      // códigos no reconocidos (para avisar)
+    for(const raw of text.split("\n")){
+      const line = raw.trim();
+      if(!line) continue;                         // ignora líneas vacías
+      const m = line.match(CODE_RE);              // código al inicio (validado)
+      if(!m){ unknown.add(line.split(/\s+/)[0]); continue; }
+      const code = m[1].toUpperCase();
+      const rest = line.slice(m[1].length);       // lo que sigue: emojis/letras/símbolos + números
+      const nums = (rest.match(/\d+/g) || []);     // toma solo los números; el resto se omite
+      if(nums.length === 0) continue;             // código sin números -> se ignora
+      if(!map.has(code)) map.set(code, new Set());
+      const set = map.get(code);
+      for(const n of nums) set.add(parseInt(n, 10));
+    }
+    return {map, unknown};
+  }
+
+  // Intersección: mismo código + mismo número en ambas listas.
+  function crossMatch(a, b){
+    const result = new Map();
+    for(const [code, setA] of a){
+      if(!b.has(code)) continue;
+      const setB = b.get(code);
+      const common = [...setA].filter(n => setB.has(n)).sort((x, y) => x - y);
+      if(common.length) result.set(code, common);
+    }
+    return result;
+  }
+
+  // Ordena el resultado según el orden oficial de los códigos.
+  function orderMatches(matches){
+    const order = [...VALID];
+    return [...matches.entries()].sort((x, y) => order.indexOf(x[0]) - order.indexOf(y[0]));
+  }
+
+  let lastMatches = [];
+
+  function render(matches, unknownA, unknownB){
+    const out = $("output");
+    const ordered = orderMatches(matches);
+    let total = 0;
+    ordered.forEach(([,arr]) => total += arr.length);
+    $("counter").textContent = total === 1 ? "1 coincidencia" : total + " coincidencias";
+
+    if(ordered.length === 0){
+      out.innerHTML = '<div class="empty">No hay figuritas que coincidan en ambas listas.</div>';
+    } else {
+      let html = '<div class="cards">';
+      ordered.forEach(([code, nums], i) => {
+        const chips = nums.map(n => '<span class="num">'+n+'</span>').join("");
+        html += '<div class="card" style="animation-delay:'+(i*0.05)+'s">'
+              + '<span class="code">'+label(code)+'</span><div class="nums">'+chips+'</div></div>';
+      });
+      html += '</div>';
+      out.innerHTML = html;
+    }
+
+    const bad = new Set([...unknownA, ...unknownB]);
+    $("warn").textContent = bad.size
+      ? "Códigos no reconocidos (se ignoraron): " + [...bad].join(", ")
+      : "";
+
+    $("result").classList.add("show");
+  }
+
+  function buildPlainText(){
+    return lastMatches.map(([code, nums]) => label(code) + " " + nums.join(", ")).join("\n");
+  }
+
+  $("search").addEventListener("click", () => {
+    const a = $("listA").value, b = $("listB").value;
+    if(!a.trim() || !b.trim()){
+      $("alert").textContent = "⚠ Completá ambas listas antes de buscar.";
+      $("warn").textContent = "";
+      $("result").classList.remove("show");
+      return;
+    }
+    $("alert").textContent = "";
+    const pa = parseList(a), pb = parseList(b);
+    const matches = crossMatch(pa.map, pb.map);
+    lastMatches = orderMatches(matches);
+    render(matches, pa.unknown, pb.unknown);
+  });
+
+  $("copy").addEventListener("click", async () => {
+    const text = buildPlainText();
+    if(!text) return;
+    try{
+      await navigator.clipboard.writeText(text);
+      const btn = $("copy"); const old = btn.textContent;
+      btn.textContent = "¡Copiado! ✓";
+      setTimeout(() => btn.textContent = old, 1400);
+    }catch(e){ alert("No se pudo copiar automáticamente. Copiá el texto manualmente."); }
+  });
+
+  $("example").addEventListener("click", () => {
+    $("listA").value = "ARG 🇦🇷 5, 12, 18, 20\nBRA (Brasil) 3, 7, 9\nFWC1 🏆 1, 2\nMEX 44, 50";
+    $("listB").value = "arg 12, 20, 99\nFWC1 2, 3\nFWC2 🌎 8\nMEX 44";
+    $("alert").textContent = ""; $("warn").textContent = "";
+  });
+
+  $("clear").addEventListener("click", () => {
+    $("listA").value = ""; $("listB").value = "";
+    $("alert").textContent = ""; $("warn").textContent = "";
+    $("result").classList.remove("show");
+    lastMatches = [];
+  });
+</script>
+</body>
+</html>
