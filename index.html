@@ -85,6 +85,41 @@
     line-height: 1.65; letter-spacing: .01em;
   }
 
+  /* ── AVISO IMPORTANTE ───────────────────────────────────── */
+  .aviso {
+    display: flex; gap: 14px; align-items: flex-start;
+    max-width: 680px; margin: 24px auto 0;
+    background: var(--s1);
+    border: 2px solid rgba(255,215,0,.35);
+    border-left: 4px solid var(--yellow);
+    padding: 14px 18px;
+    text-align: left;
+  }
+
+  .aviso-icon {
+    font-size: 1.1rem; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .aviso-body {
+    font-size: .88rem; line-height: 1.6; color: var(--muted);
+    letter-spacing: .01em;
+  }
+
+  .aviso-body strong {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: inherit; font-weight: 700;
+    color: var(--yellow);
+  }
+
+  .aviso-body code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: .82rem; font-weight: 600;
+    background: rgba(255,215,0,.1);
+    border: 1px solid rgba(255,215,0,.25);
+    color: var(--yellow);
+    padding: 1px 6px;
+  }
+
   /* ── GRID DE PANELES ─────────────────────────────────────── */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
@@ -330,6 +365,11 @@
     <span class="badge">Álbum · Intercambio</span>
     <h1>Cruce de <span class="pop">Figuritas</span></h1>
     <p class="sub">Pegá las dos listas y encontrá las figuritas que coinciden en ambas. El cruce es por código <em>y</em> número; cualquier emoji o texto extra tras el código se omite.</p>
+
+    <div class="aviso">
+      <span class="aviso-icon">⚠️</span>
+      <div class="aviso-body"><strong>Aviso importante:</strong> para que el sistema encuentre coincidencias con las variables <code>FWC 🏆</code>, <code>FWC 🌎</code> y <code>FWC 📜</code>, es necesario escribir el número 1, 2 o 3 inmediatamente después de la letra C en ambas listas, quedando así: <code>FWC1 🏆</code>, <code>FWC2 🌎</code> y <code>FWC3 📜</code>. De lo contrario, la app no podrá clasificar correctamente esas figuritas.</div>
+    </div>
   </header>
 
   <div class="grid">
